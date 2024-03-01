@@ -1,0 +1,6 @@
+PORT = 8080
+
+Database_URL=insert mongodb uri here
+PASS= insert app password here
+BASE_URL= http://localhost:3000
+EMAIL= insert email here
