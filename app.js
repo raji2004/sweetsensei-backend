@@ -1,6 +1,6 @@
 // dependencies
 const express = require("express");
-// const cors = require("cors");
+const cors = require("cors");
 const mongoose = require("mongoose");
 const { readdirSync } = require("fs");
 const dotenv = require("dotenv");
@@ -8,6 +8,13 @@ const app = express();
 console.log(readdirSync("./routes"))
 
 dotenv.config();
+
+const corsOptions = {
+  credentials: true,
+  origin: ['http://localhost:5000', 'http://sweetsensei.com'] // Whitelist the domains you want to allow
+};
+
+app.use(cors(corsOptions));
 
 // request
 app.use(express.json());
