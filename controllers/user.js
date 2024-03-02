@@ -1,4 +1,4 @@
-const {User} = require('../models')
+const User = require('../models/user')
 const { randNum ,Mailer} = require('../helpers/helper')
 exports.login = async (req, res) => {
     const { email, password } = req.body
@@ -12,12 +12,12 @@ exports.login = async (req, res) => {
 
 
 exports.register = async (req, res) => {
-    const { fullname, email, password } = req.body
+    const { name, email, password } = req.body
     try {
-       console.log()
+       console.log(name)
         const check = await User.findOne({ email: email.toLowerCase() })
         if (!check) {
-            const user = new User({ fullname, email:email.toLowerCase() , password})
+            const user = new User({ name, email:email.toLowerCase() , password})
             await user.save()
             res.send({ user })
         } else {
@@ -25,6 +25,7 @@ exports.register = async (req, res) => {
         }
 
     } catch (err) {
+        console.log(err.message)
         res.status(400).json({ message: err.message })
     }
 }
