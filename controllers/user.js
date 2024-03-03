@@ -15,7 +15,7 @@ exports.register = async (req, res) => {
     const { name, email, password } = req.body
     try {
        console.log(name)
-       const newEmail = email.toLowerCase()
+       const newEmail = email
         const check = await User.findOne({ email: newEmail })
         if (!check) {
             const user = new User({ name, email:newEmail , password})
