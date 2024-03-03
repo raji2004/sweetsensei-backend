@@ -4,6 +4,7 @@ exports.login = async (req, res) => {
     const { email, password } = req.body
     try {
         const user = await User.findOne({ email: email.toLowerCase(), password })
+        console.log(email)
         res.send({ user })
     } catch (err) {
         res.status(400).json({ message: err.message })
@@ -15,7 +16,7 @@ exports.register = async (req, res) => {
     const { name, email, password } = req.body
     try {
        console.log(name)
-       const newEmail = email
+       const newEmail = email.toLowerCase()
         const check = await User.findOne({ email: newEmail })
         if (!check) {
             const user = new User({ name, email:newEmail , password})
