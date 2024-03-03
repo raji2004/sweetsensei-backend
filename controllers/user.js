@@ -5,7 +5,11 @@ exports.login = async (req, res) => {
     try {
         const user = await User.findOne({ email: email.toLowerCase(), password })
         console.log(email)
-        res.send({ user })
+        if (user) {
+            res.status(200).json({ message:'user logged in successfully',user })
+        }else{
+            res.status(400).json({ message: 'email or password is incorrect' })
+        }
     } catch (err) {
         res.status(400).json({ message: err.message })
     }
