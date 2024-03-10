@@ -25,7 +25,7 @@ exports.register = async (req, res) => {
         if (!check) {
             const user = new User({ name, email:newEmail , password})
             await user.save()
-            res.send({ user })
+            res.status(200).json({ user })
         } else {
             res.status(400).json({ message: "email already exist" })
         }
