@@ -1,10 +1,9 @@
-const User = require('../models/user')
+const {User} = require('../models')
 const { randNum ,Mailer} = require('../helpers/helper')
 exports.login = async (req, res) => {
     const { email, password } = req.body
     try {
         const user = await User.findOne({ email: email.toLowerCase(), password })
-        console.log(email)
         if (user) {
             res.status(200).json({ message:'user logged in successfully',user })
         }else{
@@ -19,7 +18,6 @@ exports.login = async (req, res) => {
 exports.register = async (req, res) => {
     const { name, email, password } = req.body
     try {
-       console.log(name)
        const newEmail = email.toLowerCase()
         const check = await User.findOne({ email: newEmail })
         if (!check) {
