@@ -9,7 +9,7 @@ exports.createOrAddToCart = async (req, res) => {
     if (!userCart) {
       // If the user doesn't have a cart, create one
       userCart = new Cart({ user: userId, items: [] });
-      await userCart.save();
+     
     }
 
     // Find the product
