@@ -3,8 +3,10 @@ const {Product} = require('../models');
 
 const createProduct = async (req, res) => {
   try {
-    const { title, price, imageUrl, categoryId,size,color } = req.body;
-    const newProduct = new Product({ title, price, imageUrl, categoryId,size,color });
+   
+    const { title, price, imageUrl, categoryId,size,colour } = req.body;
+    console.log(colour)
+    const newProduct = new Product({ title, price, imageUrl, categoryId,size,colour });
     const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
   } catch (error) {
