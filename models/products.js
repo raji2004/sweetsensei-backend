@@ -15,6 +15,12 @@ const ProductSchema = new Schema({
     type: String,
     required: true,
   },
+  size: {
+    type: [String],
+  },
+  colour: {
+    type: [String],
+  },
   categoryId: {
     type: Schema.Types.ObjectId,
     ref: "Category",

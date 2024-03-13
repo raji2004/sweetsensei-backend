@@ -3,8 +3,8 @@ const {Product} = require('../models');
 
 const createProduct = async (req, res) => {
   try {
-    const { title, price, imageUrl, categoryId } = req.body;
-    const newProduct = new Product({ title, price, imageUrl, categoryId });
+    const { title, price, imageUrl, categoryId,size,color } = req.body;
+    const newProduct = new Product({ title, price, imageUrl, categoryId,size,color });
     const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
   } catch (error) {
@@ -16,11 +16,11 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const { title, price, imageUrl, categoryId,productId } = req.body;
+    const { title, price, imageUrl, categoryId,productId,size,color } = req.body;
 
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      { title, price, imageUrl, categoryId },
+      { title, price, imageUrl, categoryId,size,color },
       { new: true } // Return the updated document
     );
 

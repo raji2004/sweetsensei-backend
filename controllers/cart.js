@@ -1,31 +1,44 @@
-const {Cart} = require('../models'); // Replace with the actual path to your Cart model
+const {Cart,Product} = require('../models'); // Replace with the actual path to your Cart model
 
 exports.createOrAddToCart = async (req, res) => {
-    const { product_id, title, imageUrl, price,userId,quantity } = req.body;
-  
-    try {
-      let userCart = await Cart.findOne({ user: userId });
-  
-      if (!userCart) {
-        // If the user doesn't have a cart, create one
-        userCart = new Cart({ user: userId, items: [] });
-        await userCart.save();
-      }
-  
-      // Add the item to the user's cart
-      userCart.items.push({ product_id, title, imageUrl, price ,quantity});
-      await userCart.save();
-  
-      res.status(201).json({ cart: userCart });
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
-  };
+  const { product_id, quantity,size,colour,userId } = req.body;
 
+  try {
+    let userCart = await Cart.findOne({ user: req.user.id });
+
+    if (!userCart) {
+      // If the user doesn't have a cart, create one
+      userCart = new Cart({ user: userId, items: [] });
+      await userCart.save();
+    }
+
+    // Find the product
+    const product = await Product.findById(product_id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Add the product to the user's cart
+    userCart.items.push({
+      product_id: product._id,
+      title: product.title,
+      imageUrl: product.imageUrl,
+      price: product.price,
+      size: size,
+      colour: colour,
+      quantity
+    });
+    await userCart.save();
+
+    res.status(201).json({ cart: userCart });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
 exports.updateCart = async (req, res) => {
-  const { userId } = req.params;
-  const { items } = req.body;
+
+  const { items ,userId} = req.body;
 
   try {
     // Find the user's cart and update the items
