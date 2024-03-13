@@ -22,7 +22,7 @@ const updateProduct = async (req, res) => {
 
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      { title, price, imageUrl, categoryId,size,color },
+      { title, price, imageUrl, categoryId,size,colour },
       { new: true } // Return the updated document
     );
 
