@@ -4,7 +4,7 @@ exports.createOrAddToCart = async (req, res) => {
   const { product_id, quantity,size,colour,userId } = req.body;
 
   try {
-    let userCart = await Cart.findOne({ user: req.user.id });
+    let userCart = await Cart.findOne({ user: userId });
 
     if (!userCart) {
       // If the user doesn't have a cart, create one
