@@ -43,6 +43,30 @@ exports.editprofile = async (req, res) => {
         res.status(400).json({ message: err.message })
     }
 }
+
+
+exports.resetPassword = async (req, res) => {
+    const { _id, password, newPassword } = req.body;
+
+    try {
+        const user = await User.findById(_id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (user.password !== password) {
+            return res.status(400).json({ message: 'Incorrect password' });
+        }else{
+            user.password = newPassword
+        }
+        await user.save();
+
+        res.status(200).json({ message: 'Password reset successfully' });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
 exports.getprofile = async (req, res) => {
     const { _id } = req.body
     try {
