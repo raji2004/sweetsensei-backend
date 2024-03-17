@@ -14,6 +14,14 @@ router.route('/emailAuth')
     .post(user.emailAuth)
 router.route('/resetPassword')
     .post(user.resetPassword)
+router.route('/addAddress')
+    .post(user.saveAddress)
+router.route('/deleteAddress')
+    .post(user.deleteAddress)
+router.route('/updateAddress')
+    .post(user.updateAddress)
+// router.route('/getAddress')
+//     .post(user.getAddress)
 
 
 module.exports = router;
