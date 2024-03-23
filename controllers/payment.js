@@ -1,10 +1,16 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { Cart } = require('../models');
+const { Cart,User } = require('../models');
 exports.Payments = async (req, res) => {
-  const {  _id } = req.body;
+  const {  _id,refferalCode,total } = req.body;
   try {
-
-    const cart = await Cart.findOne({ user: _id })
+    // const user = await User.findOne({ referralCode: refferalCode,});
+    // const cart = await Cart.findOne({ user: _id })
+    const [user,cart] = await Promise.all([
+      User.findOne({ referralCode: refferalCode,}),
+      Cart.findOne({ user: _id })
+    ]);
+    const referralBonus = user.calculateReferralBonus(total);
+    user.accountBalance += referralBonus;
     const lineItems = cart.items.map(product => {
       return {
         price_data: {

@@ -1,5 +1,6 @@
 const { Timestamp } = require("mongodb");
 const mongoose = require("mongoose");
+const referralCodes = require("referral-codes");
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -60,6 +61,35 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  referralCode: {
+    type: String,
+    unique: true,
+  },
+  accountBalance: {
+    type: Number,
+    default: 0,
+  },
 });
+UserSchema.pre('save', function(next) {
+  if (!this.referralCode) {
+    // Generate referral code logic
+    this.referralCodes = generateReferralCode();
+  }
+  next();
+});
+
+function generateReferralCode() {
+ const code=  referralCodes.generate({
+    length: 5,
+    count: 1,
+  });
+  return code[0];
+}
+UserSchema.methods.calculateReferralBonus = function(amount) {
+  // Calculate the percentage of the amount to award as a referral bonus
+  const referralBonusPercentage = 0.1; // For example, 10% referral bonus
+  return amount * referralBonusPercentage;
+};
+
 
 module.exports = mongoose.model("User", UserSchema);
