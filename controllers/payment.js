@@ -1,16 +1,16 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { Cart,User } = require('../models');
+const { Cart,User,Orders } = require('../models');
 exports.Payments = async (req, res) => {
   const {  _id,refferalCode,total } = req.body;
   try {
-    // const user = await User.findOne({ referralCode: refferalCode,});
-    // const cart = await Cart.findOne({ user: _id })
     const [user,cart] = await Promise.all([
       User.findOne({ referralCode: refferalCode,}),
       Cart.findOne({ user: _id })
     ]);
+
     const referralBonus = user.calculateReferralBonus(total);
     user.accountBalance += referralBonus;
+
     const lineItems = cart.items.map(product => {
       return {
         price_data: {
@@ -25,6 +25,7 @@ exports.Payments = async (req, res) => {
         quantity: product.quantity,
       };
     });
+
     const charge = await stripe.checkout.sessions.create({
       product_method_types: ['card'],
       line_items: lineItems,
@@ -32,6 +33,18 @@ exports.Payments = async (req, res) => {
       success_url: '',
       cancel_url: '',
     });
+    
+    const order = new Orders({
+      user: _id,
+      items: cart.items,
+      });
+ 
+    cart.items = [];
+    await Promise.all([
+      order.save(),
+      cart.save(),
+      user.save(),
+    ]);
 
     res.status(200).json({ id: charge.id });
   } catch (err) {

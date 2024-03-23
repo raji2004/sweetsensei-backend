@@ -1,6 +1,5 @@
-const { Timestamp } = require("mongodb");
 const mongoose = require("mongoose");
-const referralCodes = require("referral-codes");
+
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -70,20 +69,22 @@ const UserSchema = new mongoose.Schema({
     default: 0,
   },
 });
-UserSchema.pre('save', function(next) {
+UserSchema.pre('save', async function(next) {
   if (!this.referralCode) {
     // Generate referral code logic
-    this.referralCodes = generateReferralCode();
+    this.referralCode = await generateReferralCode();
   }
   next();
 });
 
-function generateReferralCode() {
- const code=  referralCodes.generate({
+async function generateReferralCode() {
+  const referralCodes = await import('referral-codes');
+  const code = referralCodes.generate({
     length: 5,
     count: 1,
   });
   return code[0];
+ 
 }
 UserSchema.methods.calculateReferralBonus = function(amount) {
   // Calculate the percentage of the amount to award as a referral bonus
