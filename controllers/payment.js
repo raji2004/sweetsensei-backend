@@ -1,15 +1,33 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-exports.Payments= async(req,res)=>{
-    const { amount, token } = req.body;
+const { Cart } = require('../models');
+exports.Payments = async (req, res) => {
+  const {  _id } = req.body;
   try {
-    const charge = await stripe.charges.create({
-      amount,
-      currency: 'usd',
-      source: token.id,
-      description: 'Charge for test@example.com',
+
+    const cart = await Cart.findOne({ user: _id })
+    const lineItems = cart.items.map(product => {
+      return {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: product.name,
+            images: [product.image],
+          },
+         unit_amount: Math.round(product.price * 100),
+         
+        },
+        quantity: product.quantity,
+      };
+    });
+    const charge = await stripe.checkout.sessions.create({
+      product_method_types: ['card'],
+      line_items: lineItems,
+      mode: 'payment',
+      success_url: '',
+      cancel_url: '',
     });
 
-    res.send('Payment successful');
+    res.status(200).json({ id: charge.id });
   } catch (err) {
     console.error('Error processing payment:', err);
     let message = 'An error occurred while processing your payment.';
