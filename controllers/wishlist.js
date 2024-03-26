@@ -85,7 +85,7 @@ exports.deleteFromWishlist = async (req, res) => {
 };
 
 exports.getWishlist = async (req, res) => {
-  const { userId } = req.params.userId;
+  const  userId  = req.params.userId;
 
   try {
     const userWishlist = await Wishlist.findOne({ user: userId });
@@ -102,7 +102,7 @@ exports.getWishlist = async (req, res) => {
 }
 
 exports.getOrders = async (req, res) => {
-  const { userId } = req.body;
+  const { userId } = req.params;
 
   try {
     const userOrders = await Orders.find({ user: userId });

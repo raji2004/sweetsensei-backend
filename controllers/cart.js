@@ -86,12 +86,13 @@ exports.deleteFromCart = async (req, res) => {
 };
 
 exports.getCart = async (req, res) => {
-  const { userId } = req.params.userId;
+  const  userId  = req.params.userId;
 
   try {
     const userCart = await Cart.findOne({ user: userId });
-
+    
     if (!userCart) {
+      console.log({userCart,userId})
       return res.status(404).json({ message: 'Cart not found for the user.' });
     }
 
