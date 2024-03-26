@@ -82,4 +82,21 @@ exports.deleteFromCart = async (req, res) => {
   }
 };
 
+exports.getCart = async (req, res) => {
+  const { userId } = req.params.userId;
+
+  try {
+    const userCart = await Cart.findOne({ user: userId });
+
+    if (!userCart) {
+      return res.status(404).json({ message: 'Cart not found for the user.' });
+    }
+
+    res.status(200).json({ cart: userCart });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
 

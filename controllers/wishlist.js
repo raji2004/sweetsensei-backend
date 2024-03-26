@@ -1,4 +1,4 @@
-const {Wishlist,Product} = require('../models'); // Replace with the actual path to your Wishlist model
+const {Wishlist,Product,Orders} = require('../models'); // Replace with the actual path to your Wishlist model
 
 exports.createOrAddToWishlist = async (req, res) => {
   const { product_id, quantity,size,colour,userId } = req.body;
@@ -81,5 +81,39 @@ exports.deleteFromWishlist = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+exports.getWishlist = async (req, res) => {
+  const { userId } = req.params.userId;
+
+  try {
+    const userWishlist = await Wishlist.findOne({ user: userId });
+
+    if (!userWishlist) {
+      return res.status(404).json({ message: 'Wishlist not found for the user.' });
+    }
+
+    res.status(200).json({ Wishlist: userWishlist });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
+exports.getOrders = async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    const userOrders = await Orders.find({ user: userId });
+
+    if (!userOrders) {
+      return res.status(404).json({ message: 'Orders not found for the user.' });
+    }
+
+    res.status(200).json({ Orders: userOrders });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
 
 
