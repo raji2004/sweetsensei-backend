@@ -7,5 +7,7 @@ router.route('/wishlist/:userId')
 .post(Wishlist.createOrAddToWishlist)
 .put(Wishlist.updateWishlist)
 .delete(Wishlist.deleteFromWishlist)
+router.route('/orders/:userId')
+.get(Wishlist.getOrders)
 
 module.exports = router;
