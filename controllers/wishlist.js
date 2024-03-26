@@ -1,15 +1,15 @@
-const {Wishlist,Product,Orders} = require('../models'); // Replace with the actual path to your Wishlist model
+const { Wishlist, Product, Orders } = require('../models'); // Replace with the actual path to your Wishlist model
 
 exports.createOrAddToWishlist = async (req, res) => {
-  const { product_id, quantity,size,colour,userId } = req.body;
-
+  const { product_id, quantity, size, colour } = req.body;
+  const userId = req.params.userId;
   try {
     let userWishlist = await Wishlist.findOne({ user: userId });
 
     if (!userWishlist) {
       // If the user doesn't have a Wishlist, create one
       userWishlist = new Wishlist({ user: userId, items: [] });
-     
+
     }
 
     // Find the product
@@ -38,7 +38,8 @@ exports.createOrAddToWishlist = async (req, res) => {
 }
 exports.updateWishlist = async (req, res) => {
 
-  const { items ,userId} = req.body;
+  const { items } = req.body;
+  const userId = req.params.userId;
 
   try {
     // Find the user's Wishlist and update the items
@@ -61,7 +62,8 @@ exports.updateWishlist = async (req, res) => {
 
 
 exports.deleteFromWishlist = async (req, res) => {
-  const { userId, _id } = req.body;
+  const { _id } = req.body;
+  const userId = req.params.userId;
 
   try {
     // Find the user's Wishlist and remove the item

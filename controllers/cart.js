@@ -1,7 +1,8 @@
 const {Cart,Product} = require('../models'); // Replace with the actual path to your Cart model
 
 exports.createOrAddToCart = async (req, res) => {
-  const { product_id, quantity,size,colour,userId } = req.body;
+  const { product_id, quantity,size,colour } = req.body;
+  const userId = req.params.userId;
 
   try {
     let userCart = await Cart.findOne({ user: userId });
@@ -38,7 +39,8 @@ exports.createOrAddToCart = async (req, res) => {
 }
 exports.updateCart = async (req, res) => {
 
-  const { items ,userId} = req.body;
+  const { items } = req.body;
+  const userId = req.params.userId;
 
   try {
     // Find the user's cart and update the items
@@ -61,7 +63,8 @@ exports.updateCart = async (req, res) => {
 
 
 exports.deleteFromCart = async (req, res) => {
-  const { userId, _id } = req.body;
+  const {  _id } = req.body;
+  const userId = req.params.userId;
 
   try {
     // Find the user's cart and remove the item
