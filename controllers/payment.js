@@ -1,10 +1,10 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { Cart,User,Orders } = require('../models');
+const { Cart, User, Orders } = require('../models');
 exports.Payments = async (req, res) => {
-  const {  _id,refferalCode,total } = req.body;
+  const { _id, refferalCode, total } = req.body;
   try {
-    const [user,cart] = await Promise.all([
-      User.findOne({ referralCode: refferalCode,}),
+    const [user, cart] = await Promise.all([
+      User.findOne({ referralCode: refferalCode, }),
       Cart.findOne({ user: _id })
     ]);
 
@@ -19,8 +19,8 @@ exports.Payments = async (req, res) => {
             name: product.name,
             images: [product.image],
           },
-         unit_amount: Math.round(product.price * 100),
-         
+          unit_amount: Math.round(product.price * 100),
+
         },
         quantity: product.quantity,
       };
@@ -33,12 +33,12 @@ exports.Payments = async (req, res) => {
       success_url: '',
       cancel_url: '',
     });
-    
+
     const order = new Orders({
       user: _id,
       items: cart.items,
-      });
- 
+    });
+
     cart.items = [];
     await Promise.all([
       order.save(),

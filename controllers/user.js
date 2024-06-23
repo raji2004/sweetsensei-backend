@@ -67,6 +67,15 @@ exports.resetPassword = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find()
+        res.send({ users })
+    } catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+}
 exports.getprofile = async (req, res) => {
     const { _id } = req.body
     try {

@@ -22,6 +22,7 @@ router.route('/updateAddress')
     .post(user.updateAddress)
 // router.route('/getAddress')
 //     .post(user.getAddress)
-
+router.route('/getAllUsers')
+.get(user.getAllUsers)
 
 module.exports = router;
